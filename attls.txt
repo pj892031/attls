@@ -1,0 +1,116 @@
+TTLSRule ServerRule
+{
+  LocalAddr ALL
+  RemoteAddr ALL
+  LocalPortRange 12345
+  Direction Inbound
+  TTLSGroupActionRef ServerGroupAction
+  TTLSEnvironmentActionRef ServerEnvironmentAction
+  TTLSConnectionActionRef ServerConnectionAction
+}
+
+TTLSGroupAction ServerGroupAction
+{
+  TTLSEnabled On
+}
+
+TTLSEnvironmentAction ServerEnvironmentAction
+{
+  HandshakeRole Server
+  EnvironmentUserInstance 0
+  TTLSEnvironmentAdvancedParmsRef EnvironmentAdvancedParms
+  TTLSKeyringParmsRef Keyring
+}
+
+TTLSKeyringParms Keyring
+{
+  Keyring RINGID
+}
+
+TTLSEnvironmentAdvancedParms EnvironmentAdvancedParms
+{
+  ApplicationControlled Off
+  Renegotiation Disabled
+  SSLv2 Off
+  SSLv3 Off
+  TLSv1 Off
+  TLSv1.1 Off
+  TLSv1.2 On
+  TLSv1.3 On
+}
+
+TTLSConnectionAction ServerConnectionAction
+{
+  HandshakeRole Server
+  TTLSCipherParmsRef CipherParms
+  TTLSConnectionAdvancedParmsRef ConnectionAdvancedParms
+}
+
+TTLSConnectionAdvancedParms ConnectionAdvancedParms
+{
+  ApplicationControlled Off
+  ServerCertificateLabel sercCert
+  SecondaryMap Off
+}
+
+TTLSCipherParms CipherParms
+{
+  V3CipherSuites TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+  V3CipherSuites TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384
+  V3CipherSuites TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  V3CipherSuites TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+  V3CipherSuites TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+  V3CipherSuites TLS_AES_128_GCM_SHA256
+  V3CipherSuites TLS_AES_256_GCM_SHA384
+  V3CipherSuites TLS_CHACHA20_POLY1305_SHA256
+}
+
+TTLSRule ClientRule
+{
+  RemotePortRange 12340-12345
+  Jobname MYJOB*
+  Direction Outbound
+  TTLSGroupActionRef ClientGroupAction
+  TTLSEnvironmentActionRef ClientEnvironmentAction
+  TTLSConnectionActionRef ClientConnectionAction
+}
+
+TTLSEnvironmentAction ClientEnvironmentAction
+{
+  HandshakeRole Client
+  TTLSKeyringParmsRef Keyring
+  TTLSCipherParmsRef CipherParms
+  TTLSEnvironmentAdvancedParmsRef EnvironmentAdvancedParms
+}
+
+TTLSGroupAction ClientGroupAction
+{
+  TTLSEnabled ON
+}
+
+TTLSConnectionAction ClientConnectionAction
+{
+  HandshakeRole Client
+  TTLSCipherParmsRef CipherParms
+  TTLSConnectionAdvancedParmsRef ConnectionAdvancedParms
+}
+
+TTLSConnectionAdvancedParms ConnectionAdvancedParms
+{
+  CertificateLabel clientCert
+}
+
+TTLSEnvironmentAction ServerEnvironmentAction
+{
+  HandshakeRole ServerWithClientAuth
+}
+
+TTLSEnvironmentAdvancedParms EnvironmentAdvancedParms
+{
+  ClientAuthType Full
+}
+
+TTLSConnectionAction ServerConnectionAction
+{
+  HandshakeRole ServerWithClientAuth
+}
